@@ -2,6 +2,7 @@ package com.sky.service;
 
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
+import com.sky.result.PageResult;
 
 public interface EmployeeService {
 
@@ -17,4 +18,6 @@ public interface EmployeeService {
      * @param employee
      */
     void save(Employee employee);
+
+    PageResult page(String name, Integer page, Integer pageSize);
 }
