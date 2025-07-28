@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -33,4 +34,9 @@ public interface EmployeeMapper {
     Employee selectbyid(Integer id);
 
     void update(Employee employee);
+    @Update("update employee set password=#{newPassword} where id=#{empId} and password=#{oldPassword}")
+    void editpassword(PasswordEditDTO passwordEditDTO);
+
+    @Select("select * from employee where id= #{empId} and password= #{oldPassword}")
+    Employee selectbyidandpassword(PasswordEditDTO passwordEditDTO);
 }
