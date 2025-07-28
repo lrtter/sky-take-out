@@ -22,4 +22,8 @@ public interface EmployeeService {
     PageResult page(String name, Integer page, Integer pageSize);
 
     void setstatus(Integer status, Integer id);
+
+    Employee selectbyid(Integer id);
+
+    void update(Employee employee);
 }

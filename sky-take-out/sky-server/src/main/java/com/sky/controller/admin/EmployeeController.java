@@ -70,22 +70,39 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Result save(@RequestBody Employee employee){
+    public Result save(@RequestBody Employee employee) {
         log.info("新增员工，员工数据：{}", employee);
         employeeService.save(employee);
         return Result.success();
     }
 
     @GetMapping("/page")
-    public Result page(String name,@RequestParam(defaultValue = "1") Integer page,@RequestParam(defaultValue = "10") Integer pageSize){
-        PageResult pageResult =employeeService.page(name, page, pageSize);
+    public Result page(String name, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer pageSize) {
+        PageResult pageResult = employeeService.page(name, page, pageSize);
         return Result.success(pageResult);
     }
 
     @PostMapping("/status/{status}")
-    public Result setstatus(@PathVariable("status") Integer status, @RequestParam("id") Integer id){
+    public Result setstatus(@PathVariable("status") Integer status, @RequestParam("id") Integer id) {
 
-        employeeService.setstatus(status,id);
+        employeeService.setstatus(status, id);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    public Result selectById(@PathVariable Integer id){
+        Employee employee =employeeService.selectbyid(id);
+        return Result.success(employee);
+    }
+
+    @PutMapping
+    public Result update(@RequestBody Employee employee){
+        employeeService.update(employee);
+        return Result.success();
+    }
+
+    @PutMapping("/editPassword")
+    public Result editpassword(){
         return Result.success();
     }
 }

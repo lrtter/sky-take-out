@@ -96,4 +96,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.setstatus(status,id);
     }
 
+    @Override
+    public Employee selectbyid(Integer id) {
+        return employeeMapper.selectbyid(id);
+    }
+
+    @Override
+    public void update(Employee employee) {
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
+    }
+
 }
