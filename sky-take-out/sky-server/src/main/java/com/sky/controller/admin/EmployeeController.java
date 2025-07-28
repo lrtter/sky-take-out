@@ -81,4 +81,11 @@ public class EmployeeController {
         PageResult pageResult =employeeService.page(name, page, pageSize);
         return Result.success(pageResult);
     }
+
+    @PostMapping("/status/{status}")
+    public Result setstatus(@PathVariable("status") Integer status, @RequestParam("id") Integer id){
+
+        employeeService.setstatus(status,id);
+        return Result.success();
+    }
 }

@@ -20,4 +20,6 @@ public interface EmployeeService {
     void save(Employee employee);
 
     PageResult page(String name, Integer page, Integer pageSize);
+
+    void setstatus(Integer status, Integer id);
 }
