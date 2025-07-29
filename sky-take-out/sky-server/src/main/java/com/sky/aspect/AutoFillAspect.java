@@ -47,7 +47,7 @@ public class AutoFillAspect {
                 Method setUpdateTime = object.getClass().getMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
                 Method setUpdateUser = object.getClass().getMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
                 Method setCreateTime = object.getClass().getMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
-                Method setCreateUser = object.getClass().getMethod(AutoFillConstant.SET_CREATE_USER, Long.class);
+                Method setCreateUser = object.getClass().getMethod(AutoFillConstant.SET_CREATE_USER , Long.class);
 
                 setUpdateTime.invoke(object,now);
                 setUpdateUser.invoke(object,id);
@@ -58,8 +58,8 @@ public class AutoFillAspect {
             }
         }else{
             try {
-                Method setUpdateTime = object.getClass().getMethod("setUpdateTime", LocalDateTime.class);
-                Method setUpdateUser = object.getClass().getMethod("setUpdateUser", Long.class);
+                Method setUpdateTime = object.getClass().getMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
+                Method setUpdateUser = object.getClass().getMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
 
                 setUpdateTime.invoke(object,now);
                 setUpdateUser.invoke(object,id);
