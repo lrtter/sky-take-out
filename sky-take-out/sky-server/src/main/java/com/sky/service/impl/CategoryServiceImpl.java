@@ -26,10 +26,10 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         category.setType(categoryPageQueryDTO.getType());
         category.setName(categoryPageQueryDTO.getName());
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setUpdateUser(BaseContext.getCurrentId());
 
         List<Category> list =mapper.page(category);
 
@@ -49,10 +49,10 @@ public class CategoryServiceImpl implements CategoryService {
         category.setName(categoryD.getName());
         category.setSort(categoryD.getSort());
         category.setStatus(StatusConstant.ENABLE);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
-        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setCreateUser(BaseContext.getCurrentId());
 
         mapper.save(category);
     }
@@ -69,8 +69,8 @@ public class CategoryServiceImpl implements CategoryService {
         category.setType(categoryDTO.getType());
         category.setName(categoryDTO.getName());
         category.setSort(categoryDTO.getSort());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
 
         mapper.update(category);
     }
