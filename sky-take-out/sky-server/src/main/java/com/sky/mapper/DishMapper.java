@@ -34,4 +34,8 @@ public interface DishMapper {
 
     @Select("select * from dish where category_id=#{categoryId}")
     List<Dish> selectByCategoryId(Integer categoryId);
+
+
+    @Select("select d.*,c.name categoryName from dish d join category c on d.category_id = c.id where d.category_id= #{categoryId}")
+    List<DishVO> select1(Integer categoryId);
 }

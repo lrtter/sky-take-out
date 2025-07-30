@@ -22,4 +22,6 @@ public interface DishService {
     void update(DishDTO dishDTO);
 
     List<Dish> list(Integer categoryId);
+
+    List<DishVO> list1(Integer categoryId);
 }

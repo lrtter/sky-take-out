@@ -11,6 +11,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,4 +87,15 @@ public class SetmealServiceImpl implements SetmealService {
         setmealDishMapper.delete(ids);
         setmealDishMapper.save(setmealDishes);
     }
+
+    @Override
+    public List<Setmeal> selectById1(Integer categoryId) {
+        return mapper.selectById1(categoryId);
+    }
+
+    @Override
+    public List<DishItemVO> selectBySetmealid(Integer id) {
+        return setmealDishMapper.selectBySetmealId(id);
+    }
+
 }

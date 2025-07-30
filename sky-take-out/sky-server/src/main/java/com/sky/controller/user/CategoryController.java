@@ -1,4 +1,4 @@
-package com.sky.controller.admin;
+package com.sky.controller.user;
 
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("adminCategoryController")
-@RequestMapping("/admin/category")
+@RestController("userCategoryController")
+@RequestMapping("/user/category")
 public class CategoryController {
     @Autowired
     private CategoryService service;
@@ -23,29 +23,7 @@ public class CategoryController {
         return Result.success(result);
     }
 
-    @PostMapping("/status/{status}")
-    public Result setstatus(@PathVariable Integer status,Integer id){
-        service.setstatus(status,id);
-        return Result.success();
-    }
 
-    @PostMapping
-    public Result save(@RequestBody CategoryDTO categoryD){
-        service.save(categoryD);
-        return Result.success();
-    }
-
-    @DeleteMapping
-    public Result delete(Integer id){
-        service.delete(id);
-        return Result.success();
-    }
-
-    @PutMapping
-    public Result upadte(@RequestBody CategoryDTO categoryDTO){
-        service.update(categoryDTO);
-        return Result.success();
-    }
 
     @GetMapping("/list")
     public Result list(Integer type){
