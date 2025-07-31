@@ -7,6 +7,8 @@ import com.sky.result.Result;
 import com.sky.service.SetmealService;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,16 +28,18 @@ public class SetmealController {
     }
 
     @PostMapping
+    @CacheEvict(cacheNames = "setmealCache", key = "#setmealDTO.categoryId")
     public Result save(@RequestBody SetmealDTO setmealDTO){
         service.save(setmealDTO);
-        delredis("setmeal_" + setmealDTO.getCategoryId());
+
         return Result.success();
     }
 
     @PostMapping("/status/{status}")
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public Result setstatus(@PathVariable Integer status,Integer id){
         service.setstatus(status,id);
-        delredis("setmeal_*");
+
         return Result.success();
     }
 
@@ -46,21 +50,19 @@ public class SetmealController {
     }
 
     @DeleteMapping
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public Result delete(String ids){
         service.delete(ids);
-        delredis("setmeal_*");
         return Result.success();
     }
 
     @PutMapping
+    @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     public Result update(@RequestBody SetmealDTO setmealDTO){
         service.update(setmealDTO);
-        delredis("setmeal_*");
+
         return Result.success();
     }
 
-    private void delredis(String pattern) {
-        Set keys = redisTemplate.keys(pattern);
-        redisTemplate.delete(keys);
-    }
+
 }

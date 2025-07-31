@@ -9,6 +9,7 @@ import com.sky.service.SetmealService;
 import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,16 +23,9 @@ public class SetmealController {
     @Autowired
     private RedisTemplate redisTemplate;
     @GetMapping("/list")
+    @Cacheable(cacheNames = "setmealCache",key = "#categoryId")
     public Result selectById(Integer categoryId){
-        String key="setmeal_"+categoryId;
-        List<Setmeal> list =(List<Setmeal>) redisTemplate.opsForValue().get(key);
-
-        if(list!=null && list.size()>0){
-            return Result.success(list);
-        }
-
         List<Setmeal> result = service.selectById1(categoryId);
-        redisTemplate.opsForValue().set(key,result);
        return Result.success(result);
     }
 
