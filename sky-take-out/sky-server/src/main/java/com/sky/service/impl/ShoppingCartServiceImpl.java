@@ -60,4 +60,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
     }
+
+    @Override
+    public List<ShoppingCart> list() {
+        Long id = BaseContext.getCurrentId();
+        return mapper.selectByUserId(id);
+    }
+
+
 }

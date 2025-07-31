@@ -4,6 +4,7 @@ import com.sky.entity.ShoppingCart;
 import com.sky.result.Result;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,4 +22,7 @@ public interface ShoppingCartMapper {
            "values (#{name},#{userId},#{dishId},#{setmealId},#{dishFlavor},#{number},#{amount},#{image},#{createTime})")
    void insert(ShoppingCart shoppingCart);
 
+
+   @Select("select * from shopping_cart where user_id=#{id}")
+   List<ShoppingCart> selectByUserId(Long id);
 }
