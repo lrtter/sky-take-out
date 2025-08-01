@@ -38,4 +38,25 @@
         </set>
         where id = #{id}
     </update>
+    <select id="historyOrders" resultType="com.sky.entity.Orders">
+        select * from orders
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="beginTime != null and endTime!=null">
+                and order_time between #{beginTime} and #{endTime}
+            </if>
+            <if test="phone != null">
+                and phone like '%${phone}%'
+            </if>
+            <if test="number != null">
+                and number like '%${number}%'
+            </if>
+        </where>
+        order by order_time desc
+    </select>
 </mapper>

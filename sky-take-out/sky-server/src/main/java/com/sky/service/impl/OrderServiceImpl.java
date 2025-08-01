@@ -1,22 +1,27 @@
 package com.sky.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -150,5 +155,122 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+    }
+
+    @Override
+    public OrderVO getOrderDetail(Integer id) {
+        Orders order = orderMapper.getOrderDetails(id);
+        OrderVO orderVO=new OrderVO();
+        BeanUtils.copyProperties(order,orderVO);
+        orderVO.setOrderDetailList(orderDetailMapper.selectByOrderId(orderVO.getId()));
+        return orderVO;
+    }
+
+    @Override
+    public PageResult historyOrders(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
+        List<Orders> list=orderMapper.historyOrders(ordersPageQueryDTO);
+
+        List<OrderVO> list1=new ArrayList<>();
+
+        if(list!=null){
+            for (Orders orders : list) {
+                OrderVO orderVO=new OrderVO();
+                BeanUtils.copyProperties(orders,orderVO);
+                List<OrderDetail> orderDetails = orderDetailMapper.selectByOrderId(orders.getId());
+                orderVO.setOrderDetailList(orderDetails);
+                list1.add(orderVO);
+            }
+        }
+
+
+        return new PageResult(list1.size(),list1);
+    }
+
+    @Override
+    public void cancle(Integer id) {
+        LocalDateTime now = LocalDateTime.now();
+        orderMapper.cancle(id,now);
+    }
+
+    @Override
+    public void repetition(Integer id) {
+        Orders oreder = orderMapper.getOrderDetails(id);
+        List<OrderDetail> orderDetails = orderDetailMapper.selectByOrderId(oreder.getId());
+        oreder.setStatus(Orders.PENDING_PAYMENT);
+        oreder.setPayStatus(Orders.UN_PAID);
+        oreder.setOrderTime(LocalDateTime.now());
+        orderMapper.insert(oreder);
+
+        for (OrderDetail orderDetail : orderDetails) {
+            orderDetail.setOrderId(oreder.getId());
+        }
+
+
+        orderDetailMapper.insertBatch(orderDetails);
+    }
+
+    @Override
+    public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        List<Orders> list = orderMapper.historyOrders(ordersPageQueryDTO);
+        List<OrderVO> list1 = new ArrayList<>();
+
+        if(list!=null){
+            for (Orders orders : list) {
+                OrderVO orderVO = new OrderVO();
+                BeanUtils.copyProperties(orders,orderVO);
+
+                List<OrderDetail> orderDetails = orderDetailMapper.selectByOrderId(orders.getId());
+                if(orderDetails!= null){
+                    String orderDishes = "";
+                    for (OrderDetail orderDetail : orderDetails) {
+                        orderDishes += orderDetail.getName() + "*" + orderDetail.getNumber() + ";";
+                    }
+                    orderVO.setOrderDishes(orderDishes);
+                }
+                list1.add(orderVO);
+            }
+        }
+
+        return new PageResult(list1.size(),list1);
+    }
+
+    @Override
+    public void confirm(Integer id) {
+        orderMapper.confirm(id);
+    }
+
+    @Override
+    public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
+        orderMapper.rejection(ordersRejectionDTO);
+    }
+
+    @Override
+    public void cancel(OrdersCancelDTO ordersCancelDTO) {
+        LocalDateTime now = LocalDateTime.now();
+        orderMapper.cancel(ordersCancelDTO,now);
+    }
+
+    @Override
+    public void delivery(Integer id) {
+        LocalDateTime time = LocalDateTime.now();
+        orderMapper.delivery(id,time);
+    }
+
+    @Override
+    public void complete(Integer id) {
+        orderMapper.complete(id);
+    }
+
+    @Override
+    public OrderStatisticsVO statistics() {
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        orderStatisticsVO.setConfirmed(orderMapper.count(Orders.CONFIRMED));
+        orderStatisticsVO.setToBeConfirmed(orderMapper.count(Orders.TO_BE_CONFIRMED));
+        orderStatisticsVO.setDeliveryInProgress(orderMapper.count(Orders.DELIVERY_IN_PROGRESS));
+
+        return orderStatisticsVO;
     }
 }
