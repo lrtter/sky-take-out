@@ -65,7 +65,7 @@ public interface OrderMapper {
     @Update("update orders set status =5 where id = #{id}")
     void complete(Integer id);
 
-    @Select("select count(id) from orders where status = #{status}")
+
     Integer count(Integer status);
 
 
@@ -74,4 +74,6 @@ public interface OrderMapper {
 
     Integer calculate(LocalDateTime begin, LocalDateTime end, Integer status);
 
+    @Select("select sum(amount) from orders where order_time between #{begin} and #{end} and status=5")
+    Double turnover(LocalDateTime begin, LocalDateTime end);
 }
