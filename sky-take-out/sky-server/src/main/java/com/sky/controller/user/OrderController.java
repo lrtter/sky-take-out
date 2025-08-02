@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.alibaba.fastjson.JSON;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
@@ -10,10 +11,14 @@ import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController("userOrderController")
 @RequestMapping("/user/order")
@@ -22,7 +27,8 @@ public class OrderController {
 
     @Autowired
     private OrderService service;
-
+    @Autowired
+    private WebSocketServer webSocketServer;
     @PostMapping("/submit")
     public Result submit(@RequestBody OrdersSubmitDTO ordersSubmitDTO){
         OrderSubmitVO result =service.submit(ordersSubmitDTO);
@@ -42,6 +48,16 @@ public class OrderController {
         OrderController orderService;
         OrderPaymentVO orderPaymentVO = service.payment(ordersPaymentDTO);
         log.info("生成预支付交易单：{}", orderPaymentVO);
+
+        //来单提醒
+        Map map=new HashMap();
+        map.put("type", 1);
+        map.put("orderId", ordersPaymentDTO.getOrderNumber());
+        map.put("content", "订单号："+ordersPaymentDTO.getOrderNumber());
+
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
+
         return Result.success(orderPaymentVO);
     }
 
