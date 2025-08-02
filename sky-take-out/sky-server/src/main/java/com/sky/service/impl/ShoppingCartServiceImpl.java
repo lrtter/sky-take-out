@@ -1,8 +1,10 @@
 package com.sky.service.impl;
 
+import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.ShoppingCart;
+import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
@@ -80,6 +82,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.setUserId(BaseContext.getCurrentId());
 
         List<ShoppingCart> list = mapper.list(shoppingCart);
+        if(list==null || list.size()==0){
+            throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
+        }
         ShoppingCart cart = list.get(0);
         if(cart.getNumber()==1){
             mapper.deleteById(cart.getId());

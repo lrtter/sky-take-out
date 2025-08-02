@@ -71,4 +71,7 @@ public interface OrderMapper {
 
     @Select("select * from orders where status=#{status} and order_time < #{time}")
     List<Orders> selectByTimeandStatus(Integer status, LocalDateTime time);
+
+    Integer calculate(LocalDateTime begin, LocalDateTime end, Integer status);
+
 }

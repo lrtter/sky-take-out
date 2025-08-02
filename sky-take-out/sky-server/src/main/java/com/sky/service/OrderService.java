@@ -45,4 +45,6 @@ public interface OrderService {
 
     OrderStatisticsVO statistics();
 
+    void reminder(Integer id);
+
 }

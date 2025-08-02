@@ -9,4 +9,11 @@
             (#{orderDetail.image},#{orderDetail.name},#{orderDetail.orderId},#{orderDetail.dishId},#{orderDetail.setmealId},#{orderDetail.dishFlavor},#{orderDetail.number},#{orderDetail.amount})
         </foreach>
     </insert>
+    <select id="top10" resultType="com.sky.entity.SaleReport">
+        select dish_id, name, count(dish_id) as number from order_detail od join orders o on od.order_id = o.id
+        where o.status = 5 and o.order_time &gt;= #{begin} and o.order_time &lt;= #{end}
+        group by od.dish_id,od.name
+        order by count(dish_id) desc
+        limit 10
+    </select>
 </mapper>
