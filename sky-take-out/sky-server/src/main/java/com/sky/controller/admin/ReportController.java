@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -45,4 +47,8 @@ public class ReportController {
         return Result.success(result);
     }
 
+    @GetMapping("/export")
+    public void export(HttpServletResponse response){
+        reportService.export(response);
+    }
 }

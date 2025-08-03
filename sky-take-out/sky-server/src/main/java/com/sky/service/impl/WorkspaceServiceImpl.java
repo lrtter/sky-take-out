@@ -61,10 +61,48 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         LocalDate time = LocalDate.now();
         result.setNewUsers(userMapper.getnewuser(LocalDateTime.of(time,LocalTime.MIN), LocalDateTime.of(time,LocalTime.MAX)));
         result.setTurnover(orderMapper.turnover(LocalDateTime.of(time,LocalTime.MIN), LocalDateTime.of(time,LocalTime.MAX)));
+        if(result.getTurnover()==null)
+            result.setTurnover(0.0);
         result.setValidOrderCount(orderMapper.calculate(LocalDateTime.of(time,LocalTime.MIN), LocalDateTime.of(time,LocalTime.MAX), Orders.COMPLETED));
-        result.setUnitPrice(result.getTurnover()/result.getValidOrderCount().doubleValue());
+        if(result.getValidOrderCount()== 0){
+            result.setUnitPrice(0.0);
+        }else{
+            result.setUnitPrice(result.getTurnover()/result.getValidOrderCount().doubleValue());
+        }
+
         int totalOrder=orderMapper.calculate(LocalDateTime.of(time,LocalTime.MIN), LocalDateTime.of(time,LocalTime.MAX),null);
-        result.setOrderCompletionRate(result.getValidOrderCount().doubleValue()/totalOrder);
+        if (totalOrder==0){
+            result.setOrderCompletionRate(0.0);
+        }else{
+            result.setOrderCompletionRate(result.getValidOrderCount().doubleValue()/totalOrder);
+        }
+
+
+        return result;
+    }
+
+
+    public BusinessDataVO businessData(LocalDate begin, LocalDate end) {
+        BusinessDataVO result = new BusinessDataVO();
+        LocalDate time = LocalDate.now();
+        result.setNewUsers(userMapper.getnewuser(LocalDateTime.of(begin,LocalTime.MIN), LocalDateTime.of(end,LocalTime.MAX)));
+        result.setTurnover(orderMapper.turnover(LocalDateTime.of(begin,LocalTime.MIN), LocalDateTime.of(end,LocalTime.MAX)));
+        if(result.getTurnover()==null)
+            result.setTurnover(0.0);
+        result.setValidOrderCount(orderMapper.calculate(LocalDateTime.of(begin,LocalTime.MIN), LocalDateTime.of(end,LocalTime.MAX), Orders.COMPLETED));
+        if(result.getValidOrderCount()== 0){
+            result.setUnitPrice(0.0);
+        }else{
+            result.setUnitPrice(result.getTurnover()/result.getValidOrderCount().doubleValue());
+        }
+
+        int totalOrder=orderMapper.calculate(LocalDateTime.of(begin,LocalTime.MIN), LocalDateTime.of(end,LocalTime.MAX),null);
+        if (totalOrder==0){
+            result.setOrderCompletionRate(0.0);
+        }else{
+            result.setOrderCompletionRate(result.getValidOrderCount().doubleValue()/totalOrder);
+        }
+
 
         return result;
     }

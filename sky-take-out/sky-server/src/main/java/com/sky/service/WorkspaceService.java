@@ -5,6 +5,8 @@ import com.sky.vo.DishOverViewVO;
 import com.sky.vo.OrderOverViewVO;
 import com.sky.vo.SetmealOverViewVO;
 
+import java.time.LocalDate;
+
 public interface WorkspaceService {
     OrderOverViewVO overviewOrders();
 
@@ -15,4 +17,5 @@ public interface WorkspaceService {
 
     BusinessDataVO businessData();
 
+    BusinessDataVO businessData(LocalDate begin, LocalDate end);
 }
